@@ -33,7 +33,7 @@ function calcularIdade() {
 // Função para aplicar máscara ao CPF
 function mascaraCPF(campo) {
   campo.value = campo.value
-    .replace(/\D/g, '')
+    .replace(/\D/g, '') // Remove todos os caracteres não numéricos
     .replace(/(\d{3})(\d)/, '$1.$2')
     .replace(/(\d{3})(\d)/, '$1.$2')
     .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
@@ -42,7 +42,7 @@ function mascaraCPF(campo) {
 // Função para aplicar máscara ao telefone
 function mascaraTelefone(campo) {
   campo.value = campo.value
-    .replace(/\D/g, '')
+    .replace(/\D/g, '') // Remove todos os caracteres não numéricos
     .replace(/(\d{2})(\d)/, '($1) $2')
     .replace(/(\d{4,5})(\d{4})$/, '$1-$2');
 }
@@ -71,17 +71,25 @@ function validarFormulario(event) {
 
 // Função para validar CPF
 function validarCPF(cpf) {
-  cpf = cpf.replace(/\D/g, '');
-  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+  cpf = cpf.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false; // Verifica se tem 11 dígitos e se todos são iguais
 
   let soma = 0, resto;
-  for (let i = 1; i <= 9; i++) soma += parseInt(cpf[i - 1]) * (11 - i);
+
+  // Validação do primeiro dígito verificador
+  for (let i = 1; i <= 9; i++) {
+      soma += parseInt(cpf[i - 1]) * (11 - i);
+  }
   resto = (soma * 10) % 11;
   if (resto === 10 || resto === 11) resto = 0;
   if (resto !== parseInt(cpf[9])) return false;
 
   soma = 0;
-  for (let i = 1; i <= 10; i++) soma += parseInt(cpf[i - 1]) * (12 - i);
+
+  // Validação do segundo dígito verificador
+  for (let i = 1; i <= 10; i++) {
+      soma += parseInt(cpf[i - 1]) * (12 - i);
+  }
   resto = (soma * 10) % 11;
   if (resto === 10 || resto === 11) resto = 0;
   return resto === parseInt(cpf[10]);
